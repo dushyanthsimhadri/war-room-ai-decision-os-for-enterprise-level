@@ -6,7 +6,7 @@ import {
   MessageSquare, Globe, Map, FlaskConical, Clock, FileText,
   Mic, ChevronLeft, ChevronDown, ChevronUp, Zap, Settings,
   HelpCircle, DollarSign, BookOpen, CreditCard, ShieldCheck,
-  PieChart, LineChart, Calculator, Users, Sliders, History,
+  PieChart, LineChart, Calculator, Users, Sliders, History, Home
 } from 'lucide-react'
 import { useAppStore } from '@/store/appStore'
 import { COMPANY } from '@/data/mockData'
@@ -15,6 +15,7 @@ const coreNavGroups = [
   {
     label: 'Command Center',
     items: [
+      { to: '/', icon: Home, label: 'Home' },
       { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
       { to: '/warroom', icon: Swords, label: 'War Room', badge: 'Live' },
     ],

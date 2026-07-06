@@ -4,9 +4,9 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   ArrowRight, Zap, Brain, TrendingUp, Shield, BarChart3,
   Users, CheckCircle, GitMerge, FileText, Play, X,
-  Database, GitBranch, Cpu, Award
+  Database, Award, Home, Video, PlayCircle, Cpu
 } from 'lucide-react'
-import { AI_EMPLOYEES } from '@/data/mockData'
+import { AI_EMPLOYEES, DEMO_VIDEO_CONFIG } from '@/data/mockData'
 
 const stats = [
   { value: '10x', label: 'Faster Executive Decisions' },
@@ -46,6 +46,17 @@ export function Landing() {
     navigate('/finance?demo=true&wow=true')
   }
 
+  const scrollToSection = (id: string) => {
+    if (id === 'top') {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } else {
+      const el = document.getElementById(id)
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }
+  }
+
   const timelineSteps = [
     { label: 'Business Question', desc: 'User submits a strategic query like: "Should we pay Vendor ABC today?"', icon: '❓' },
     { label: 'Smart Agent Router', desc: 'The system parses the domain context and invites required personnel.', icon: '⚡' },
@@ -66,6 +77,12 @@ export function Landing() {
     { role: 'Internal Auditor', status: 'Analyzing', color: 'var(--accent-teal)', pulse: true },
     { role: 'Procurement Manager', status: 'Waiting', color: 'var(--text-muted)', pulse: false },
     { role: 'FP&A Analyst', status: 'Idle', color: 'var(--text-muted)', pulse: false },
+  ]
+
+  const features = [
+    { title: 'Multi-Agent debates', desc: 'Domain-expert AI employees cross-examine ledger accounts to find consensus.', icon: Brain },
+    { title: 'Scenario Sandboxing', desc: 'Simulate Build vs. Delay vs. Reject outcomes side-by-side with forecast models.', icon: GitMerge },
+    { title: 'KPI Prediction Matrix', desc: 'Compute preloaded effects on Cash, MRR, DPO, and gross margins.', icon: TrendingUp },
   ]
 
   return (
@@ -93,7 +110,7 @@ export function Landing() {
         backdropFilter: 'blur(20px)', position: 'sticky', top: 0, zIndex: 100,
         background: 'rgba(6,9,15,0.7)',
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div onClick={() => scrollToSection('top')} style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
           <div style={{
             width: 34, height: 34, borderRadius: 10, background: 'var(--gradient-primary)',
             display: 'flex', alignItems: 'center', justifySelf: 'center', justifyContent: 'center',
@@ -103,20 +120,25 @@ export function Landing() {
           </div>
           <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: 20, letterSpacing: '-0.02em' }}>WAR ROOM</span>
         </div>
-        <div style={{ display: 'flex', gap: 32, alignItems: 'center' }}>
-          <a href="#how-it-works" style={{ color: 'var(--text-secondary)', fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>How It Works</a>
-          <a href="#story" style={{ color: 'var(--text-secondary)', fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>Why WAR ROOM</a>
+        <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
+          <span onClick={() => scrollToSection('top')} style={{ color: 'var(--text-secondary)', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Home</span>
+          <span onClick={() => scrollToSection('features')} style={{ color: 'var(--text-secondary)', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Features</span>
+          <span onClick={() => scrollToSection('how-it-works')} style={{ color: 'var(--text-secondary)', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>How It Works</span>
           <span onClick={() => setShowArch(true)} style={{ color: 'var(--text-secondary)', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Architecture</span>
+          <span onClick={() => scrollToSection('story')} style={{ color: 'var(--text-secondary)', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Founder Story</span>
+          <span onClick={() => setShowVideo(true)} style={{ color: 'var(--text-secondary)', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
+            <Video size={13} /> Watch Demo
+          </span>
         </div>
         <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
           <button className="btn-primary" onClick={enterDemo} style={{ fontSize: 13, padding: '9px 18px', display: 'flex', alignItems: 'center', gap: 6 }}>
-            Launch Demo <ArrowRight size={14} />
+            Enter Demo <ArrowRight size={14} />
           </button>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section style={{ textAlign: 'center', padding: '100px 48px 60px', position: 'relative', zIndex: 1 }}>
+      <section style={{ textAlign: 'center', padding: '100px 48px 40px', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 16px', borderRadius: 99,
@@ -141,11 +163,11 @@ export function Landing() {
           <p style={{ fontSize: 20, color: 'var(--text-secondary)', marginBottom: 12, fontWeight: 600 }}>
             Every important business decision deserves a room full of experts.
           </p>
-          <p style={{ fontSize: 16, color: 'var(--text-muted)', marginBottom: 40, maxWidth: 620, margin: '0 auto 40px', lineHeight: 1.7 }}>
+          <p style={{ fontSize: 16, color: 'var(--text-muted)', marginBottom: 36, maxWidth: 620, margin: '0 auto 36px', lineHeight: 1.7 }}>
             What if those experts were autonomous AI executives acting as your CFO, Auditor, Compliance Officer, and Treasury leads? Compiling consensus, auditing records, and building forecasts in 30 seconds.
           </p>
 
-          <div style={{ display: 'flex', gap: 16, justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 16, justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', marginBottom: 40 }}>
             <motion.button
               className="btn-primary"
               onClick={enterDemo}
@@ -169,6 +191,38 @@ export function Landing() {
             >
               <FileText size={16} /> View Architecture
             </button>
+          </div>
+
+          {/* Premium Video Preview Card */}
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
+            <motion.div
+              onClick={() => setShowVideo(true)}
+              whileHover={{ scale: 1.02, boxShadow: '0 0 32px rgba(99,102,241,0.25)' }}
+              style={{
+                width: '100%', maxWidth: 580, height: 260, borderRadius: 16,
+                background: 'linear-gradient(135deg, rgba(99,102,241,0.15), rgba(6,182,212,0.08))',
+                border: '1px solid rgba(99,102,241,0.3)', cursor: 'pointer',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                position: 'relative', overflow: 'hidden'
+              }}
+            >
+              {/* Grid overlay for aesthetic */}
+              <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at center, transparent 30%, rgba(5,7,12,0.85))' }} />
+              
+              <div style={{ zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+                <PlayCircle size={48} style={{ color: 'var(--accent-indigo)' }} />
+                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>
+                  WAR ROOM — 2 Minute Product Walkthrough
+                </div>
+                <span style={{
+                  fontSize: 10, fontWeight: 800, padding: '4px 10px', borderRadius: 99,
+                  background: 'rgba(255,255,255,0.06)', border: '1px solid var(--border-subtle)',
+                  color: 'var(--text-secondary)'
+                }}>
+                  ⏱️ Duration: 2:00
+                </span>
+              </div>
+            </motion.div>
           </div>
         </motion.div>
       </section>
@@ -312,6 +366,29 @@ export function Landing() {
         </div>
       </section>
 
+      {/* Features Grid Section */}
+      <section id="features" style={{ padding: '80px 48px', borderBottom: '1px solid var(--border-subtle)' }}>
+        <div style={{ textAlign: 'center', marginBottom: 50 }}>
+          <h2 style={{ fontFamily: 'Outfit', fontSize: 36, fontWeight: 800, letterSpacing: '-0.02em', marginBottom: 12 }}>
+            Premium Features
+          </h2>
+          <p style={{ fontSize: 15, color: 'var(--text-secondary)', maxWidth: 540, margin: '0 auto' }}>
+            Advanced capabilities built for Recruiters and Enterprise decision execution.
+          </p>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, maxWidth: 1100, margin: '0 auto' }}>
+          {features.map((f, i) => (
+            <div key={i} className="card" style={{ padding: 24 }}>
+              <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(99,102,241,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+                <f.icon size={18} style={{ color: 'var(--accent-indigo)' }} />
+              </div>
+              <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 8 }}>{f.title}</h3>
+              <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.55 }}>{f.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Visual Timeline: How It Works */}
       <section id="how-it-works" style={{ padding: '80px 48px', position: 'relative' }}>
         <div style={{ textAlign: 'center', marginBottom: 50 }}>
@@ -320,7 +397,7 @@ export function Landing() {
             <span className="gradient-text">How WAR ROOM Operates</span>
           </h2>
           <p style={{ fontSize: 15, color: 'var(--text-secondary)', maxWidth: 540, margin: '0 auto' }}>
-            A deterministic multi-agent pipeline resolving strategic proposals in nine key stages.
+            A deterministic multi-agent pipeline resolving strategic proposals in Stage operations.
           </p>
         </div>
 
@@ -403,7 +480,7 @@ export function Landing() {
           Experience the Future of Decisions
         </h2>
         <p style={{ fontSize: 15, color: 'var(--text-secondary)', marginBottom: 32 }}>
-          Convene your autonomous board in less than 30 seconds.
+          Convene your board in less than 30 seconds.
         </p>
         <button
           onClick={enterDemo}
@@ -414,27 +491,53 @@ export function Landing() {
         </button>
       </section>
 
-      {/* Video Demo Modal */}
+      {/* Video Demo Modal Dialog */}
       <AnimatePresence>
         {showVideo && (
           <div style={{
-            position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)',
+            position: 'fixed', inset: 0, background: 'rgba(5,7,12,0.9)', backdropFilter: 'blur(12px)',
             display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 24
           }}>
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
-              className="card" style={{ maxWidth: 800, width: '100%', overflow: 'hidden', padding: 0 }}
+              className="card" style={{ maxWidth: 740, width: '100%', overflow: 'hidden', padding: 0 }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 24px', borderBottom: '1px solid var(--border-subtle)' }}>
-                <span style={{ fontSize: 14, fontWeight: 700 }}>🎥 WAR ROOM — 2 Minute Walkthrough</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '18px 24px', borderBottom: '1px solid var(--border-subtle)' }}>
+                <span style={{ fontSize: 14, fontWeight: 800 }}>{DEMO_VIDEO_CONFIG.title}</span>
                 <button onClick={() => setShowVideo(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
                   <X size={18} />
                 </button>
               </div>
-              <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, background: 'black' }}>
-                <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16 }}>
-                  <Play size={48} style={{ color: 'var(--accent-indigo)' }} />
-                  <span style={{ fontSize: 14, color: 'var(--text-secondary)' }}>Interactive Demo Sandbox: Explore directly via "Enter Demo" CTA.</span>
+              <div style={{ padding: 24 }}>
+                {DEMO_VIDEO_CONFIG.url ? (
+                  <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', borderRadius: 12, background: 'black', border: '1px solid var(--border-subtle)' }}>
+                    <iframe
+                      src={DEMO_VIDEO_CONFIG.url}
+                      title={DEMO_VIDEO_CONFIG.title}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                      style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+                    />
+                  </div>
+                ) : (
+                  <div style={{
+                    padding: '48px 24px', borderRadius: 12, background: 'rgba(255,255,255,0.01)',
+                    border: '1px dashed var(--border-subtle)', textAlign: 'center', display: 'flex',
+                    flexDirection: 'column', alignItems: 'center', gap: 14
+                  }}>
+                    <PlayCircle size={40} style={{ color: 'var(--accent-indigo)' }} />
+                    <div>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 6 }}>Demo Video Coming Soon</div>
+                      <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Upload your Loom or YouTube link here.</div>
+                    </div>
+                  </div>
+                )}
+                
+                <div style={{ marginTop: 20 }}>
+                  <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                    {DEMO_VIDEO_CONFIG.description}
+                  </p>
                 </div>
               </div>
             </motion.div>

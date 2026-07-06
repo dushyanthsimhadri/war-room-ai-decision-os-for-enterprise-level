@@ -12,6 +12,12 @@ export const COMPANY = {
   arr: 28080000,
 }
 
+export const DEMO_VIDEO_CONFIG = {
+  url: '', // Empty to show 'coming soon' placeholder as default, or configure YouTube embed url
+  title: 'WAR ROOM — 2 Minute Product Walkthrough',
+  description: 'See how autonomous AI executives collaborate to make business decisions.'
+}
+
 // ============================================================
 // KPI Data
 // ============================================================
