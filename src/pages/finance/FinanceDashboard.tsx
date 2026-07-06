@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -13,6 +13,7 @@ import {
   ChevronRight, Zap, Shield, Activity, DollarSign, Swords
 } from 'lucide-react'
 import { ExplainLikeCFO } from '@/components/finance/ExplainLikeCFO'
+import { WowExperience } from '@/components/finance/WowExperience'
 
 // ─── Animated Counter ────────────────────────────────────────
 function AnimatedCounter({ target, format, duration = 1400 }: { target: number; format: string; duration?: number }) {
@@ -295,14 +296,53 @@ function ComplianceCard() {
   )
 }
 
-// ─── Finance Dashboard ────────────────────────────────────────
 export function FinanceDashboard() {
   const navigate = useNavigate()
+  const isDemo = window.location.search.includes('demo=true')
+  const [showWow, setShowWow] = useState(window.location.search.includes('wow=true'))
+
+  // Custom preloaded Demo values override
+  let kpisToRender = Object.values(financeKPIs)
+  if (isDemo) {
+    kpisToRender = kpisToRender.map((kpi) => {
+      if (kpi.label === 'Cash Position') {
+        return { ...kpi, value: 960000000, sub: 'Healthy (Across all accounts)' }
+      }
+      if (kpi.label === 'Accounts Payable') {
+        return { ...kpi, value: 132, sub: '132 pending vendor invoices', format: 'score' }
+      }
+      if (kpi.label === 'Accounts Receivable') {
+        return { ...kpi, label: 'Open Executive Decisions', value: 14, sub: '14 active decisions', format: 'score' }
+      }
+      if (kpi.label === 'Compliance Health') {
+        return { ...kpi, value: 97, sub: '97% compliance score', format: 'score' }
+      }
+      if (kpi.label === 'Forecast Accuracy') {
+        return { ...kpi, value: 93, sub: '93% forecast accuracy', format: 'score' }
+      }
+      return kpi
+    })
+  }
+
+  const companyName = isDemo ? 'WAR ROOM Technologies' : FINANCE_COMPANY.name
 
   return (
     <div>
-      <TopBar title="Finance Command Center" subtitle={`${FINANCE_COMPANY.name} · ${FINANCE_COMPANY.month}`} />
+      <TopBar title="Finance Command Center" subtitle={`${companyName} · ${FINANCE_COMPANY.month}`} />
       <div style={{ padding: 32 }}>
+
+        {/* 30 Second Wow Experience Onboarding modal */}
+        <AnimatePresence>
+          {showWow && (
+            <WowExperience
+              onClose={() => setShowWow(false)}
+              onViewBrief={() => {
+                setShowWow(false)
+                navigate('/finance/executive-brief')
+              }}
+            />
+          )}
+        </AnimatePresence>
 
         {/* AI Question Bar */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} style={{ marginBottom: 24 }}>
@@ -337,7 +377,7 @@ export function FinanceDashboard() {
 
         {/* KPI Grid — 4 cols × 3 rows */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 24 }}>
-          {Object.values(financeKPIs).map((kpi, i) => (
+          {kpisToRender.map((kpi, i) => (
             <FinKPICard key={kpi.label} kpi={kpi} delay={i * 0.04} />
           ))}
         </div>
